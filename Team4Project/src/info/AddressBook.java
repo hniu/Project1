@@ -20,8 +20,6 @@ public class AddressBook{
 	private File f;
 	//file to save
 	private File file2save;
-	//filename
-	private String fileName;
 	//is file modified
 	private boolean isModified;
 	//all records in the system
@@ -78,13 +76,6 @@ public class AddressBook{
 			}
 		}
 	}
-	
-	public String getFileName() {
-		return this.fileName;
-	}
-	public void setFileName(String fileName) {
-		this.fileName = fileName;
-	}
 	/**
 	 * check if the records exist in the system
 	 * @param Record r
@@ -138,7 +129,7 @@ public class AddressBook{
 		return this.records;
 	}
 	/**
-	 * Get the file
+	 * Get the file loaded into the address book
 	 * @return file, the file to open
 	 */
 	public File getFile() {
@@ -168,24 +159,29 @@ public class AddressBook{
 	
 	/**
 	 * SaveFunction is to save or save the record as into a txt file.
-	 * @throws IOException
 	 */
-	public void saveFunction() throws IOException
+	public void saveFunction()
 	{
 		if(this.isEditted())
 		{
-
 			String s=file2save.getPath();
-			FileWriter pw=new FileWriter(s,false);
-			PrintWriter op=new PrintWriter(pw);
-			Iterator<Record> iter = records.iterator();
+			FileWriter pw;
+			try {
+				pw = new FileWriter(s,false);
+				PrintWriter op=new PrintWriter(pw);
+				Iterator<Record> iter = records.iterator();
 
-			while(iter.hasNext())
-			{
-				Record cur = iter.next();
-				op.println(cur.getFname()+"\t"+cur.getLname()+"\t"+cur.getPhone()+"\t"+cur.getState()+"\t"+cur.getZip()+"\t"+cur.getCity()+"\t"+cur.getEmail()+"\t"+cur.getStreet());
+				while(iter.hasNext())
+				{
+					Record cur = iter.next();
+					op.println(cur.getFname()+"\t"+cur.getLname()+"\t"+cur.getPhone()+"\t"+cur.getState()+"\t"+cur.getZip()+"\t"+cur.getCity()+"\t"+cur.getEmail()+"\t"+cur.getStreet());
+				}
+				op.close();	
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
-			op.close();	
+			
 		}
 	}
 

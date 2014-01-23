@@ -1,7 +1,7 @@
 package gui;
 
-import info.Record;
 
+import info.Record;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.SWT;
@@ -26,15 +26,7 @@ public class GUI_Record {
 	private boolean committed;
 	//window style, 0 for insert and 1 for update
 	private int style;
-	
-	/*
-	 * Regex for input validation
-	 * 1. name has no number
-	 * 2.
-	 */
-	private String namePatn = "[a-zA-Z]+";
-	private String emalPatn = "";
-	private String phonePatn = "";
+
 	/**
 	 * Constructor with the new record passed in
 	 * @param Op int, 0 for add new record, 1 for update the old
@@ -44,6 +36,10 @@ public class GUI_Record {
 		this.inRecord = newRecord;
 		this.style = op;
 	}
+	/**
+	 * To check if the user want to add the new record or cancelled.
+	 * @return
+	 */
 	public boolean isCommited(){
 		return committed;
 	}
@@ -174,9 +170,10 @@ public class GUI_Record {
 					inRecord.setStreet(street.getText());
 					inRecord.setZip(zip.getText());
 				}else{
-					
+		            
 				}
 				committed = true;
+				
 				shlNew.dispose();
 			}
 		});
@@ -188,6 +185,7 @@ public class GUI_Record {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				committed = false;
+				shlNew.dispose();
 			}
 		});
 		btnCancel.setText("Cancel");

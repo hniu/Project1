@@ -23,6 +23,8 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.widgets.Table;
+import org.eclipse.swt.events.ShellAdapter;
+import org.eclipse.swt.events.ShellEvent;
 
 
 public class GUI_AddressBook {
@@ -75,14 +77,8 @@ public class GUI_AddressBook {
 		fd.open();
 		if(!fd.getFileName().equals(""))
 		{
-			try {
-				System.out.println(fd.getFilterPath()+"\\"+fd.getFileName());
-				ab.setFile2Save(new File(fd.getFilterPath()+"\\"+fd.getFileName()));
-				ab.saveFunction();
-			} catch (IOException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
+			ab.setFile2Save(new File(fd.getFilterPath()+"\\"+fd.getFileName()));
+			ab.saveFunction();
 		}
 	}
 	/**
@@ -114,6 +110,8 @@ public class GUI_AddressBook {
 			if(selection == 1){
 				//set the open one as saving file
 				ab.setFile2Save(file);
+				shellAB.setText("Address Book App"+"("+fd.getFileName()+")");
+
 			}else{//import
 				if(ab.getFile2Save()==null){
 					ab.setFile2Save(file);
@@ -167,10 +165,35 @@ public class GUI_AddressBook {
 		refTable();
 	}
 	/**
+	 * Check save before quit the window
+	 */
+	private void saveBeforeExit(){
+		if(ab.isEditted())
+		{
+            MessageBox messageBox = new MessageBox(shellAB,SWT.ICON_INFORMATION | SWT.YES | SWT.NO);
+            messageBox.setText("QUIT");
+            messageBox.setMessage("The file has been changed. Do you want to save the file?");
+            int rc = messageBox.open();
+            if (rc == SWT.YES) 
+            {
+            	ab.saveFunction();
+            }
+		}
+	}
+	/**
 	 * Create contents of the window.
 	 */
-	protected void createContents() {
+	protected void createContents() 
+	{
 		shellAB = new Shell();
+		shellAB.addShellListener(new ShellAdapter() {
+			@Override
+			//If will show the a message box for saving edited information.
+			public void shellClosed(ShellEvent e) 
+			{
+				saveBeforeExit();
+			}
+		});
 		shellAB.setSize(839, 366);
 		shellAB.setText("Address Book App");
 		shellAB.setLayout(null);
@@ -199,7 +222,7 @@ public class GUI_AddressBook {
 				newWin.open();
 			}
 		});
-		mntmNew.setText("New");
+		mntmNew.setText("New Windows");
 		
 		MenuItem mntmOpen = new MenuItem(menu_1, SWT.NONE);
 
@@ -220,12 +243,7 @@ public class GUI_AddressBook {
 		mntmSave.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				try {
-					ab.saveFunction();
-				} catch (IOException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
+				ab.saveFunction();
 			}
 		});
 		mntmSave.setText("Save");
@@ -241,6 +259,13 @@ public class GUI_AddressBook {
 		mntmSaveAs.setText("Save As...");
 		
 		MenuItem mntmExit = new MenuItem(menu_1, SWT.NONE);
+		mntmExit.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				saveBeforeExit();
+				shellAB.dispose();
+			}
+		});
 		mntmExit.setText("Exit");
 		
 		Button btnAdd = new Button(shellAB, SWT.NONE);
@@ -295,9 +320,18 @@ public class GUI_AddressBook {
 		btnDeleteOne.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				ab.delRecord(map.get(table.getSelectionIndex() + 1));
-				refTable();
-				ab.setModified();
+				if(table.getSelectionIndex() != -1){
+					ab.delRecord(map.get(table.getSelectionIndex() + 1));
+					refTable();
+					ab.setModified();
+				}else{
+					//set the message box to show if no record selected
+					MessageBox mb = new MessageBox(shellAB, SWT.OK);
+					if(selected == null){
+						mb.setMessage("No Record Selected!");
+					}
+					mb.open();
+				}
 			}
 		});
 		btnDeleteOne.setText("Delete One");
