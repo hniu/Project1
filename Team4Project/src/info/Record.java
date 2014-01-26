@@ -13,9 +13,10 @@ public class Record implements Comparable<Record>{
 	private String state;
 	private String phone;
 	private String email;
-	private String street;
+	private String address1;
+	private String address2;
 	//constructor for the record
-	Record(String fname, String lname, String zip, String city, String state, String phone, String email, String street){
+	Record(String fname, String lname, String zip, String city, String state, String phone, String email, String address1, String address2){
 		this.setCity(city);
 		this.setEmail(email);
 		this.setFname(fname);
@@ -23,7 +24,8 @@ public class Record implements Comparable<Record>{
 		this.setPhone(phone);
 		this.setState(state);
 		this.setZip(zip);
-		this.setStreet(street);
+		this.setAddress1(address1);
+		this.setAddress2(address2);
 	}
 	//constructor with empty parameter
 	public Record() {
@@ -82,17 +84,30 @@ public class Record implements Comparable<Record>{
 		return email;
 	}
 	//set the email
-	public void setEmail(String email) {
+	public void setEmail(String email) 
+	{
 		this.email = email;
 	}
 	//get the street
-	public String getStreet(){
-		return street;
+	public String getAddress1()
+	{
+		return address1;
 	}
 	//set the street
-	public void setStreet(String street){
-		this.street = street;
+	public void setAddress1(String address1)
+	{
+		this.address1 = address1;
 	}
+	public String getAddress2()
+	{
+		return address2;
+	}
+	//set the street
+	public void setAddress2(String address2)
+	{
+		this.address2 = address2;
+	}
+	
 	/**
 	 * Print the mail information
 	 * @return the string of the mail format
@@ -100,7 +115,8 @@ public class Record implements Comparable<Record>{
 	public String printMailFormat(){
 		String strMail = "Standard US Mail Address:\n" 
 				+ fname + " " + lname + "\n"
-				+ street + "\n"
+				+ address1 + "\n"
+				+ address2 + "\n"
 				+ city + "," + state + "," + zip + " | " + phone
 				+ "\nEmail: " + email;
 		return strMail;
@@ -118,7 +134,8 @@ public class Record implements Comparable<Record>{
 				o.phone.compareToIgnoreCase(this.phone) == 0 &&
 				o.state.compareToIgnoreCase(this.state) == 0 &&
 				o.email.compareToIgnoreCase(this.email) == 0 &&
-				o.street.compareToIgnoreCase(this.street) == 0 &&
+				o.address1.compareToIgnoreCase(this.address1) == 0 &&
+				o.address2.compareToIgnoreCase(this.address2) == 0 &&
 				o.city.compareToIgnoreCase(this.city) == 0){
 			flag = 0;
 		}else{

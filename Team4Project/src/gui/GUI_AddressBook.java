@@ -3,7 +3,6 @@ import info.AddressBook;
 import info.Record;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.TreeSet;
@@ -85,14 +84,17 @@ public class GUI_AddressBook {
 	 * This method used to import or open files into the list on the interface
 	 * @param i, int 0 for import and 1 for open a new file
 	 */
-	private void helpLoad(int selection){
+	private void helpLoad(int selection)
+	{
 		//create an open-file dialog
 		FileDialog fd = new FileDialog(shellAB, 0);
 		//file extension 
 		String[] ext = {"*.txt"};
 		fd.setFilterExtensions(ext);
 		fd.open();
+
 		//gets the file
+		
 		if(!fd.getFileName().equals("")){
 			String fileName = fd.getFilterPath().toString()+"\\"+fd.getFileName().toString();
 			//each time load a new add, remove all from the list
@@ -102,10 +104,13 @@ public class GUI_AddressBook {
 					adds.removeAll(adds);
 				}
 			}
+
 			//load the file
 			file = new File(fileName);
 			//load file into address book
+			
 			ab.loadF(file);
+			
 			//define which file is to save
 			if(selection == 1){
 				//set the open one as saving file
@@ -117,6 +122,7 @@ public class GUI_AddressBook {
 					ab.setFile2Save(file);
 				}
 			}
+			
 			//get records in the adds
 			adds = ab.getRecords();
 			refTable();
@@ -135,7 +141,7 @@ public class GUI_AddressBook {
 			Record cur = iter.next();
 			map.put(i, cur);
 			TableItem item=new TableItem(table,SWT.NONE);
-			item.setText(new String[] {i+"",cur.getLname(),cur.getFname(), cur.getStreet(), cur.getCity(), cur.getState(), cur.getZip(), cur.getPhone(), cur.getEmail()});
+			item.setText(new String[] {i+"",cur.getLname(),cur.getFname(), cur.getAddress1(), cur.getAddress2(), cur.getCity(), cur.getState(), cur.getZip(), cur.getPhone(), cur.getEmail()});
 			i++;
 		}
 	}
@@ -194,7 +200,7 @@ public class GUI_AddressBook {
 				saveBeforeExit();
 			}
 		});
-		shellAB.setSize(839, 366);
+		shellAB.setSize(935, 366);
 		shellAB.setText("Address Book App");
 		shellAB.setLayout(null);
 		//initial the address book, each window has one addressbook
@@ -364,7 +370,7 @@ public class GUI_AddressBook {
 				selected = map.get(table.getSelectionIndex() + 1);
 			}
 		});
-		table.setBounds(10, 10, 803, 259);
+		table.setBounds(10, 10, 906, 259);
 		formToolkit.adapt(table);
 		formToolkit.paintBordersFor(table);
 		table.setHeaderVisible(true);
@@ -383,9 +389,13 @@ public class GUI_AddressBook {
 		column1.setWidth(100);
 		column1.setText("First Name");
 		
-		TableColumn column2=new TableColumn(table,SWT.NONE);
-		column2.setWidth(100);
-		column2.setText("Stree");
+		TableColumn column21=new TableColumn(table,SWT.NONE);
+		column21.setWidth(100);
+		column21.setText("Address 1");
+		
+		TableColumn column22=new TableColumn(table,SWT.NONE);
+		column22.setWidth(100);
+		column22.setText("Address 2");
 		
 		TableColumn column3=new TableColumn(table,SWT.NONE);
 		column3.setWidth(100);
