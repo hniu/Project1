@@ -1,12 +1,10 @@
 package gui;
-
-import info.Record;
-
-
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
+import info.Record;
+import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Button;
@@ -14,9 +12,6 @@ import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Combo;
-
 
 public class GUI_Record {
 
@@ -25,7 +20,6 @@ public class GUI_Record {
 	private boolean committed;
 	//window style, 0 for insert and 1 for update
 	private int style;
-	
 	/*
 	 * Regex for input validation
 	 * 1. upper-case character + lower-case characters
@@ -48,7 +42,6 @@ public class GUI_Record {
 	private Text email;
 	private Combo state;
 
-	
 	/**
 	 * Constructor with the new record passed in
 	 * @param Op int, 0 for add new record, 1 for update the old
@@ -58,6 +51,10 @@ public class GUI_Record {
 		this.inRecord = newRecord;
 		this.style = op;
 	}
+	/**
+	 * To check if the user want to add the new record or cancelled.
+	 * @return
+	 */
 	public boolean isCommited(){
 		return committed;
 	}
@@ -118,15 +115,13 @@ public class GUI_Record {
 		{
 			flag =false;
 		}
-		System.out.println(flag);
 		return flag;
 	}
 	/**
 	 * Create contents of the window.
 	 * @wbp.parser.entryPoint
 	 */
-	protected void createContents() 
-	{
+	protected void createContents() {
 		shlNew = new Shell();
 		shlNew.setSize(514, 369);
 		shlNew.setText("New Record / Current Record");
@@ -210,6 +205,7 @@ public class GUI_Record {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				committed = false;
+				shlNew.dispose();
 			}
 		});
 		btnCancel.setText("Cancel");

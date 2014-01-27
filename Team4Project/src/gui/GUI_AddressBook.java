@@ -1,7 +1,6 @@
 package gui;
 import info.AddressBook;
 import info.Record;
-
 import java.io.File;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -17,19 +16,19 @@ import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.events.MouseAdapter;
-import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.events.ShellAdapter;
 import org.eclipse.swt.events.ShellEvent;
-
+/**
+ * The start gui of the address book application.
+ * @author Team 4
+ *
+ */
 
 public class GUI_AddressBook {
 
 	protected Shell shellAB;
-	private final FormToolkit formToolkit = new FormToolkit(Display.getDefault());
 	private File file;
 	private AddressBook ab;
 	private TreeSet<Record> adds;
@@ -63,12 +62,22 @@ public class GUI_AddressBook {
 			}
 		}
 	}
+	/**
+	 * Show error msgbox with no record selected.
+	 */
+	private void error(){
+		//set the message box to show if no record selected
+		MessageBox mb = new MessageBox(shellAB, SWT.OK);
+		if(selected == null){
+			mb.setMessage("No Record Selected!");
+		}
+		mb.open();
+	}
 	
 	/**
 	 * Save as function using as save as and export
 	 */
 	private void saveAs(){
-		ab.setModified();
 		FileDialog fd = new FileDialog(shellAB, SWT.SAVE);
 		//file extension 
 		String[] ext = {"*.txt"};
@@ -84,17 +93,14 @@ public class GUI_AddressBook {
 	 * This method used to import or open files into the list on the interface
 	 * @param i, int 0 for import and 1 for open a new file
 	 */
-	private void helpLoad(int selection)
-	{
+	private void helpLoad(int selection){
 		//create an open-file dialog
 		FileDialog fd = new FileDialog(shellAB, 0);
 		//file extension 
 		String[] ext = {"*.txt"};
 		fd.setFilterExtensions(ext);
 		fd.open();
-
 		//gets the file
-		
 		if(!fd.getFileName().equals("")){
 			String fileName = fd.getFilterPath().toString()+"\\"+fd.getFileName().toString();
 			//each time load a new add, remove all from the list
@@ -104,13 +110,10 @@ public class GUI_AddressBook {
 					adds.removeAll(adds);
 				}
 			}
-
 			//load the file
 			file = new File(fileName);
 			//load file into address book
-			
 			ab.loadF(file);
-			
 			//define which file is to save
 			if(selection == 1){
 				//set the open one as saving file
@@ -120,9 +123,11 @@ public class GUI_AddressBook {
 			}else{//import
 				if(ab.getFile2Save()==null){
 					ab.setFile2Save(file);
+				}else{
+					//any second import operation will modify the file
+					ab.setModified();
 				}
 			}
-			
 			//get records in the adds
 			adds = ab.getRecords();
 			refTable();
@@ -134,15 +139,17 @@ public class GUI_AddressBook {
 	 */
 	private void refTable(){
 		table.removeAll();
-		Iterator<Record> iter = adds.iterator();
-		int i = 1;
-		//fill in all the table records
-		while(iter.hasNext()){
-			Record cur = iter.next();
-			map.put(i, cur);
-			TableItem item=new TableItem(table,SWT.NONE);
-			item.setText(new String[] {i+"",cur.getLname(),cur.getFname(), cur.getAddress1(), cur.getAddress2(), cur.getCity(), cur.getState(), cur.getZip(), cur.getPhone(), cur.getEmail()});
-			i++;
+		if(adds!=null){
+			Iterator<Record> iter = adds.iterator();
+			int i = 1;
+			//fill in all the table records
+			while(iter.hasNext()){
+				Record cur = iter.next();
+				map.put(i, cur);
+				TableItem item=new TableItem(table,SWT.NONE);
+				item.setText(new String[] {i+"",cur.getLname(),cur.getFname(), cur.getAddress1(), cur.getAddress2(), cur.getCity(), cur.getState(), cur.getZip(), cur.getPhone(), cur.getEmail()});
+				i++;
+			}
 		}
 	}
 	/**
@@ -159,13 +166,16 @@ public class GUI_AddressBook {
 			//when the add win close, then add records
 			if(recordWin.isCommited()){
 				adds.add(newRecord);
+    			ab.setModified();
 			}
 		}else{
 			//update the current record
-			
 			if(selected != null){
 				recordWin = new GUI_Record(1, selected);
 				recordWin.open();
+    			ab.setModified();
+			}else{
+				error();
 			}
 		}
 		refTable();
@@ -182,7 +192,17 @@ public class GUI_AddressBook {
             int rc = messageBox.open();
             if (rc == SWT.YES) 
             {
-            	ab.saveFunction();
+            	//if the virtual book is empty
+            	if(!ab.isEmpty()){
+            		//have saving file?
+            		if(ab.getFile2Save() == null){
+            			//pop out save as gui
+                    	saveAs();
+            		}else{
+            			//no need to pop up windows
+                    	ab.saveFunction();
+            		}
+            	}
             }
 		}
 	}
@@ -192,6 +212,14 @@ public class GUI_AddressBook {
 	protected void createContents() 
 	{
 		shellAB = new Shell();
+		//get the address book entity
+		ab = new AddressBook();
+		//get all the records in the address book
+		adds = ab.getRecords();
+		//initial the address book, each window has one addressbook
+		//create the map with line and record
+		map = new HashMap<Integer,Record>();
+
 		shellAB.addShellListener(new ShellAdapter() {
 			@Override
 			//If will show the a message box for saving edited information.
@@ -203,13 +231,8 @@ public class GUI_AddressBook {
 		shellAB.setSize(935, 366);
 		shellAB.setText("Address Book App");
 		shellAB.setLayout(null);
-		//initial the address book, each window has one addressbook
-		ab = new AddressBook();
-		//create the map with line and record
-		map = new HashMap<Integer,Record>();
 		Menu menu = new Menu(shellAB, SWT.BAR);
 		shellAB.setMenuBar(menu);
-		
 		MenuItem mntmMenu = new MenuItem(menu, SWT.CASCADE);
 		mntmMenu.setText("Menu");
 		
@@ -282,7 +305,6 @@ public class GUI_AddressBook {
 			}
 		});
 		btnAdd.setBounds(22, 275, 75, 25);
-		formToolkit.adapt(btnAdd, true, true);
 		btnAdd.setText("Add One");
 		
 		Button btnUpdate = new Button(shellAB, SWT.NONE);
@@ -293,9 +315,7 @@ public class GUI_AddressBook {
 			}
 		});
 		btnUpdate.setText("Update One");
-		btnUpdate.setBounds(216, 275, 75, 25);
-		formToolkit.adapt(btnUpdate, true, true);
-		
+		btnUpdate.setBounds(216, 275, 75, 25);		
 		Button btnExport = new Button(shellAB, SWT.NONE);
 		btnExport.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -305,7 +325,6 @@ public class GUI_AddressBook {
 		});
 		btnExport.setText("Export");
 		btnExport.setBounds(410, 275, 75, 25);
-		formToolkit.adapt(btnExport, true, true);
 		
 		Button btnImport = new Button(shellAB, SWT.NONE);
 		btnImport.addSelectionListener(new SelectionAdapter() {
@@ -314,13 +333,11 @@ public class GUI_AddressBook {
 			public void widgetSelected(SelectionEvent e) {
 				//open file by do not import behavior which does not delete old records
 				helpLoad(0);
-				//any import operation will modify the file
-				ab.setModified();
+				
 			}
 		});
 		btnImport.setText("Import");
 		btnImport.setBounds(313, 275, 75, 25);
-		formToolkit.adapt(btnImport, true, true);
 		
 		Button btnDeleteOne = new Button(shellAB, SWT.NONE);
 		btnDeleteOne.addSelectionListener(new SelectionAdapter() {
@@ -332,35 +349,27 @@ public class GUI_AddressBook {
 					ab.setModified();
 				}else{
 					//set the message box to show if no record selected
-					MessageBox mb = new MessageBox(shellAB, SWT.OK);
-					if(selected == null){
-						mb.setMessage("No Record Selected!");
-					}
-					mb.open();
+					error();
 				}
 			}
 		});
 		btnDeleteOne.setText("Delete One");
 		btnDeleteOne.setBounds(119, 275, 75, 25);
-		formToolkit.adapt(btnDeleteOne, true, true);
 		
 		Button btnMailingFormat = new Button(shellAB, SWT.NONE);
-		btnMailingFormat.addMouseListener(new MouseAdapter() {
+		btnMailingFormat.addSelectionListener(new SelectionAdapter() {
 			@Override
-			public void mouseDown(MouseEvent e) {
+			public void widgetSelected(SelectionEvent e) {
 				//set the message box to show the mailling format
-				MessageBox mb = new MessageBox(shellAB, SWT.OK);
 				if(selected == null){
-					mb.setMessage("No Record Selected!");
+					error();
 				}else{
-					mb.setMessage(selected.printMailFormat());
+					//call printer msg
 				}
-				mb.open();
 			}
 		});
 		btnMailingFormat.setText("Mailing Format");
 		btnMailingFormat.setBounds(507, 275, 94, 25);
-		formToolkit.adapt(btnMailingFormat, true, true);
 		
 		table = new Table(shellAB, SWT.BORDER | SWT.FULL_SELECTION);
 		table.addSelectionListener(new SelectionAdapter() {
@@ -371,8 +380,7 @@ public class GUI_AddressBook {
 			}
 		});
 		table.setBounds(10, 10, 906, 259);
-		formToolkit.adapt(table);
-		formToolkit.paintBordersFor(table);
+
 		table.setHeaderVisible(true);
 		table.setLinesVisible(true);
 		
@@ -389,13 +397,9 @@ public class GUI_AddressBook {
 		column1.setWidth(100);
 		column1.setText("First Name");
 		
-		TableColumn column21=new TableColumn(table,SWT.NONE);
-		column21.setWidth(100);
-		column21.setText("Address 1");
-		
-		TableColumn column22=new TableColumn(table,SWT.NONE);
-		column22.setWidth(100);
-		column22.setText("Address 2");
+		TableColumn column2=new TableColumn(table,SWT.NONE);
+		column2.setWidth(100);
+		column2.setText("Stree");
 		
 		TableColumn column3=new TableColumn(table,SWT.NONE);
 		column3.setWidth(100);
@@ -416,6 +420,14 @@ public class GUI_AddressBook {
 		TableColumn column7=new TableColumn(table,SWT.NONE);
 		column7.setWidth(154);
 		column7.setText("Email Address");
+		
+		TableColumn column8=new TableColumn(table,SWT.NONE);
+		column8.setWidth(100);
+		column8.setText("Address 1");
+		
+		TableColumn column9=new TableColumn(table,SWT.NONE);
+		column9.setWidth(100);
+		column9.setText("Address 2");
 		
 	}
 }
