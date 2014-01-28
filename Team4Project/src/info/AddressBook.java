@@ -29,7 +29,8 @@ public class AddressBook{
 	 * create an instance for the physical address book on the disk
 	 * @param fileName, String the addressbook name on the disk
 	 */
-	public AddressBook(File file){
+	public AddressBook(File file)
+	{
 		//create the set
 		this.records = new TreeSet<Record>();
 		this.setFile(file);
@@ -55,7 +56,8 @@ public class AddressBook{
 				Scanner inputFile = new Scanner(file);
 				while(inputFile.hasNext())
 				{
-					//Hanqing	Zhao	5419132015	OR	97401	Eugene	hanqing@uoregon.edu
+					
+					//Hanqing	Zhao	5419132015	OR	97401	Eugene	hanqing@uoregon.edu 
 					String[] reader=inputFile.nextLine().split("\t");
 					String fname = reader[0];
 					String lname = reader[1];
@@ -66,7 +68,8 @@ public class AddressBook{
 					String email = reader[6];
 					String address1 = reader[7];
 					String address2 = reader[8];
-					Record r = new Record(fname,lname,zip, city,state, phone, email, address1, address2);					this.addRecord(r);
+					Record r = 	new Record(fname,lname,zip, city,state, phone, email, address1, address2);
+					this.addRecord(r);
 					this.isModified = false;
 				}
 				inputFile.close();
@@ -174,7 +177,8 @@ public class AddressBook{
 				while(iter.hasNext())
 				{
 					Record cur = iter.next();
-					op.println(cur.getFname()+"\t"+cur.getLname()+"\t"+cur.getPhone()+"\t"+cur.getState()+"\t"+cur.getZip()+"\t"+cur.getCity()+"\t"+cur.getEmail()+"\t"+cur.getAddress1()+"\t"+cur.getAddress2());				}
+					op.println(cur.getFname()+"\t"+cur.getLname()+"\t"+cur.getPhone()+"\t"+cur.getState()+"\t"+cur.getZip()+"\t"+cur.getCity()+"\t"+cur.getEmail()+"\t"+cur.getAddress1()+"\t"+cur.getAddress2());
+				}
 				op.close();	
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
@@ -182,6 +186,7 @@ public class AddressBook{
 			}
 			
 		}
+		this.isModified = false;
 	}
 
 }

@@ -16,7 +16,8 @@ public class Record implements Comparable<Record>{
 	private String address1;
 	private String address2;
 	//constructor for the record
-	Record(String fname, String lname, String zip, String city, String state, String phone, String email, String address1, String address2){		this.setCity(city);
+	Record(String fname, String lname, String zip, String city, String state, String phone, String email, String address1, String address2){
+		this.setCity(city);
 		this.setEmail(email);
 		this.setFname(fname);
 		this.setLname(lname);
@@ -83,9 +84,30 @@ public class Record implements Comparable<Record>{
 		return email;
 	}
 	//set the email
-	public void setEmail(String email) {
+	public void setEmail(String email) 
+	{
 		this.email = email;
 	}
+	//get the street
+	public String getAddress1()
+	{
+		return address1;
+	}
+	//set the street
+	public void setAddress1(String address1)
+	{
+		this.address1 = address1;
+	}
+	public String getAddress2()
+	{
+		return address2;
+	}
+	//set the street
+	public void setAddress2(String address2)
+	{
+		this.address2 = address2;
+	}
+	
 	/**
 	 * Print the mail information
 	 * @return the string of the mail format
@@ -128,17 +150,5 @@ public class Record implements Comparable<Record>{
 			}
 		}
 		return flag;
-	}
-	public String getAddress1() {
-		return address1;
-	}
-	public void setAddress1(String address1) {
-		this.address1 = address1;
-	}
-	public String getAddress2() {
-		return address2;
-	}
-	public void setAddress2(String address2) {
-		this.address2 = address2;
 	}
 }

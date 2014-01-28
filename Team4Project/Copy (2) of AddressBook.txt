@@ -1,7 +1,0 @@
-kkk	zzz	5419132015	OR	97401	Eugene	hanqing@uoregon.edu	Kinsrow Ave.
-mmm	zzz	5419132015	OR	97400	Eugene	wolok@uoregon.edu	Bug St.
-mmm	yyy	5419132015	OR	97402	Eugene	hanqing@uoregon.edu	Patterson St.
-yyy	zzz	5419132015	OR	97403	Eugene	hanqing@uoregon.edu	High St.
-qqq	ttt	5419132015	OR	97404	Eugene	hanqing@uoregon.edu	Low St.
-ccc	kkk	5419132015	OR	97405	Eugene	hanqing@uoregon.edu	Baker Street.
-bbb	ddd	5419132015	OR	97401	Eugene	hanqing@uoregon.edu	Baker Street.
