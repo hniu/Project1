@@ -1,4 +1,0 @@
-Hao	Hanqing	541-913-2015	AK	97401	Eugene	hanqing@uoregon.edu	Kinsrow 3438	APT128
-Zhao	Aanqing	541-913-2015	AK	97401	Eugene	hanqing@uoregon.edu	Kinsrow 3438	APT128
-Dao	Kanqing	541-913-2015	AK	97401	Eugene	hanqing@uoregon.edu	Kinsrow 3438	APT128
-Kao	Janqing	541-913-2015	AK	97401	Eugene	hanqing@uoregon.edu	Kinsrow 3438	APT128
